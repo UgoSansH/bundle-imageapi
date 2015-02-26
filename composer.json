@@ -1,5 +1,5 @@
 {
-    "name": "ugosansh/bundle-clientimage",
+    "name": "ugosansh/bundle-imageapi",
     "license": "MIT",
     "type": "bundle",
     "description": "REST Server api bundle from image management",
