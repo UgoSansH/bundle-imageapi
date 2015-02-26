@@ -1,0 +1,82 @@
+parameters:
+    ugosansh_image_api.image.class:           Ugosansh\Bundle\Image\EntityBundle\Entity\Image
+    ugosansh_image_api.image.repository_name: "UgosanshImageEntityBundle:Image"
+    ugosansh_image_api.temp_dir:              ~
+    ugosansh_image_api.root_dir:              "%kernel.root_dir%/web/uploads/images"
+    ugosansh_image_api.chmod:                 777
+    ugosansh_image_api.default_source:        "default"
+
+services:
+    ugosansh_image_api.filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+
+    ugosansh_image_api.finder:
+        class: Symfony\Component\Finder\Finder
+
+    ugosansh_image_api.image.filesystem:
+        class: Ugosansh\Component\Image\FileSystem
+        arguments:
+            - %ugosansh_image_api.root_dir%
+
+    ugosansh_image_api.resizer:
+        class: Ugosansh\Component\Image\Resizer
+
+    ugosansh_image_api.canonicalizer:
+        class: Ugosansh\Component\Image\Canonicalizer
+
+    ugosansh_image_api.uploader:
+        class: Ugosansh\Component\Image\Upload\Uploader
+        calls:
+            - [ setAdapter, [ @ugosansh_image_api.uploader.local ] ]
+            - [ setTempFileAdapter, [ @ugosansh_image_api.temp_file.manager ] ]
+            - [ setFileSystem, [ @ugosansh_image_api.image.filesystem ] ]
+
+    ugosansh_image_api.uploader.local:
+        class: Ugosansh\Component\Image\Upload\Adapter\LocalUploadAdapter
+        arguments:
+            - @ugosansh_image_api.filesystem
+            - @ugosansh_image_api.finder
+            - %ugosansh_image_api.root_dir%
+            - %ugosansh_image_api.chmod%
+
+
+    ugosansh_image_api.form_handler:
+        class: Ugosansh\Bundle\Image\ApiBundle\Form\FormHandler
+        calls:
+            - [ setUploader, [ @ugosansh_image_api.uploader ] ]
+
+    ugosansh_image_api.image.form_type:
+        class: Ugosansh\Bundle\Image\ApiBundle\Form\Type\ImageType
+        calls:
+            - [ setDataClass, [ %ugosansh_image_api.image.class% ] ]
+            - [ setDefaultSource, [ %ugosansh_image_api.default_source% ] ]
+        tags:
+            - { name: form.type, alias: image }
+
+    ugosansh_image_api.image.manager:
+        class: Ugosansh\Bundle\Image\ApiBundle\Manager\ImageManager
+        arguments:
+            - @doctrine.orm.entity_manager
+            - "%ugosansh_image_api.image.repository_name%"
+        calls:
+            - [ setUploader, [ @ugosansh_image_api.uploader ] ]
+            - [ setFileSystem, [ @ugosansh_image_api.image.filesystem ] ]
+            - [ setResizer, [ @ugosansh_image_api.resizer ] ]
+
+    ugosansh_image_api.temp_file.manager:
+        class: Ugosansh\Component\Image\Upload\Adapter\TempFileAdapter
+        arguments:
+            - "%ugosansh_image_api.temp_dir%"
+
+    ugosansh_image_api.image_handler:
+        class: Ugosansh\Bundle\Image\ApiBundle\View\ImageHandler
+        arguments:
+            - @ugosansh_image_api.image.manager
+
+    ugosansh_image_api.view_handler:
+        parent: fos_rest.view_handler.default
+        calls:
+            - ['registerHandler', ['png', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
+            - ['registerHandler', ['jpg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
+            - ['registerHandler', ['jpeg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
+            - ['registerHandler', ['gif', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]

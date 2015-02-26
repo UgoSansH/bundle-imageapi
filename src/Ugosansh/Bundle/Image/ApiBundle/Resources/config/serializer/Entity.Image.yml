@@ -1,0 +1,42 @@
+Ugosansh\Bundle\Image\EntityBundle\Entity\Image:
+    properties:
+        id:
+           read_only: true
+        parent:
+          exclude: true
+          expose: false
+        childs:
+          exclude: true
+          expose: false
+        binarySource:
+          exclude: true
+          expose: false
+    relations:
+      - rel: self
+        href:
+          absolute: true
+          route: image_info
+          parameters:
+            id: expr(object.getId())
+      - rel: url
+        href:
+          absolute: true
+          route: image_get
+          parameters:
+            slug: expr(object.getSlug())
+            _format: expr(object.getExtension())
+      - rel: childs
+        href:
+          absolute: true
+          route: image_childs
+          parameters:
+            id: expr(object.getId())
+      - rel: parent
+        exclusion:
+          exclude_if: expr(null === object.getParent())
+        href:
+          absolute: true
+          route: image_info
+          parameters:
+            id: expr(object.getParent().getId())
+
