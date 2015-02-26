@@ -1,0 +1,20 @@
+{
+    "name": "ugosansh/bundle-clientimage",
+    "license": "MIT",
+    "type": "bundle",
+    "description": "REST Server api bundle from image management",
+    "authors": [{
+        "name": "Ugo Without H",
+        "homepage" : "https://github.com/UgoSansH"
+    }],
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php"                           : ">=5.4",
+        "nelmio/api-doc-bundle"        : "~2.7",
+        "friendsofsymfony/rest-bundle" : "~1.4",
+        "jms/serializer-bundle"        : "~0.13",
+        "willdurand/hateoas-bundle"    : "~0.4"
+    }
+}
