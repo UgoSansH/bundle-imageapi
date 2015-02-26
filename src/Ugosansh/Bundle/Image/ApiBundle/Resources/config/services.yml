@@ -16,6 +16,7 @@ services:
     ugosansh_image_api.image.filesystem:
         class: Ugosansh\Component\Image\FileSystem
         arguments:
+            - @ugosansh_image_api.filesystem
             - %ugosansh_image_api.root_dir%
 
     ugosansh_image_api.resizer:

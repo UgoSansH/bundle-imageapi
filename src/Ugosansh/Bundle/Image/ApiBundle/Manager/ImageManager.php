@@ -201,10 +201,10 @@ class ImageManager implements ImageManagerInterface
                     throw new \Exception(sprintf('Failed to create child image of "%s"', $image->getId()));
                 }
 
-                $image = $child;
-            } else {
-                $image = $child;
+                return $child;
             }
+
+            return $child;
         }
 
         return $image;
@@ -228,25 +228,19 @@ class ImageManager implements ImageManagerInterface
         $image->setParent($parent);
         $image->setTitle($parent->getTitle());
         $image->setSource($parent->getSource());
-        $image->setPath('default-'. $parent->getPath());
-
-        if (!$this->save($image)) {
-            return false;
-        }
-
         $image->setPath($this->fileSystem->defineImagePath($image));
 
-        $destination = $this->fileSystem->getAbsolutePath($image->getPath());
+        $destination    = $this->fileSystem->getAbsolutePath($image->getPath());
+        $destinationDir = substr($image->getPath(), 0, strrpos($image->getPath(), '/'));
 
-        $this->resizer
-            ->setSource($source);
+        $this->fileSystem->createDirectory($destinationDir);
+        $this->resizer->setSource($source);
 
         if (!is_null($crop)) {
             $this->resizer->setRatio($crop);
         }
 
         if ($this->resizer->resize($destination, $width, $height)) {
-
             $image = $this->fileSystem->hydrateImageInfo($image, $destination);
             $this->save($image);
 
