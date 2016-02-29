@@ -64,5 +64,5 @@ image_get:
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImage" }
     methods: GET
     requirements:
-        id: \d+
+        slug: "[a-zA-Z0-9\-\_–]+"
         _format: jpg|jpeg|png|gif|svg
