@@ -81,3 +81,4 @@ services:
             - ['registerHandler', ['jpg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
             - ['registerHandler', ['jpeg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
             - ['registerHandler', ['gif', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
+            - ['registerHandler', ['svg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]

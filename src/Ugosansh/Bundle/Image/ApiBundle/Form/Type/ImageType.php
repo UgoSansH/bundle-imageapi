@@ -34,6 +34,9 @@ class ImageType extends AbstractType
             ->add('title', 'text', [
                 'required' => false
             ])
+            ->add('mimeType', 'text', [
+                'required' => false
+            ])
         ;
 
         if ($options['data']->getId() <= 0) {

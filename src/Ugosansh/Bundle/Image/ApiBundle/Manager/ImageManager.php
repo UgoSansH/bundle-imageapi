@@ -7,6 +7,7 @@ use Ugosansh\Component\Image\ImageManagerInterface;
 use Ugosansh\Component\Image\Resizer;
 use Ugosansh\Component\Image\FileSystem;
 use Ugosansh\Component\Image\Upload\Uploader;
+use Ugosansh\Component\Image\MimeType;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -186,25 +187,27 @@ class ImageManager implements ImageManagerInterface
         }
 
         if ($image->getWidth() != $width || $image->getHeight() != $height) {
-            $source = $this->fileSystem->getAbsolutePath($image->getPath());
-            $this->resizer->setSource($source);
+            if ($image->getMimeType() != MimeType::TYPE_SVG) {
+                $source = $this->fileSystem->getAbsolutePath($image->getPath());
+                $this->resizer->setSource($source);
 
-            if (!is_null($crop)) {
-                $this->resizer->setRatio($crop);
-            }
+                if (!is_null($crop)) {
+                    $this->resizer->setRatio($crop);
+                }
 
-            $size = $this->resizer->defineSize($width, $height, $crop);
+                $size = $this->resizer->defineSize($width, $height, $crop);
 
-            if (!$child = $this->getRepository()->findBySize($id, $size['width'], $size['height'])) {
-                // Resize
-                if (!$child = $this->createChild($image, $width, $height, $crop)) {
-                    throw new \Exception(sprintf('Failed to create child image of "%s"', $image->getId()));
+                if (!$child = $this->getRepository()->findBySize($id, $size['width'], $size['height'])) {
+                    // Resize
+                    if (!$child = $this->createChild($image, $width, $height, $crop)) {
+                        throw new \Exception(sprintf('Failed to create child image of "%s"', $image->getId()));
+                    }
+
+                    return $child;
                 }
 
                 return $child;
             }
-
-            return $child;
         }
 
         return $image;
