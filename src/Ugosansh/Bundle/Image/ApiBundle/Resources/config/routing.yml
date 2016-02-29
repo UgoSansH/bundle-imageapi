@@ -29,7 +29,7 @@ image_info_generate:
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImageGenerate", _format: 'json' }
     methods: GET
     requirements:
-        _format: json|jpg|jpeg|png|gif
+        _format: json|jpg|jpeg|png|gif|svg
         id: \d+
         width: \d+
         height: \d+
@@ -65,4 +65,4 @@ image_get:
     methods: GET
     requirements:
         id: \d+
-        _format: jpg|jpeg|png|gif
+        _format: jpg|jpeg|png|gif|svg
