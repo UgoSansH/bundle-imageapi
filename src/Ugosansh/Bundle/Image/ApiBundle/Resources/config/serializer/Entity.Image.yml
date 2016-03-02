@@ -14,29 +14,29 @@ Ugosansh\Bundle\Image\EntityBundle\Entity\Image:
     relations:
       - rel: self
         href:
-          absolute: true
           route: image_info
           parameters:
             id: expr(object.getId())
+          absolute: false
       - rel: url
         href:
-          absolute: true
           route: image_get
           parameters:
             slug: expr(object.getSlug())
             _format: expr(object.getExtension())
+          absolute: false
       - rel: childs
         href:
-          absolute: true
           route: image_childs
           parameters:
             id: expr(object.getId())
+          absolute: false
       - rel: parent
         exclusion:
           exclude_if: expr(null === object.getParent())
         href:
-          absolute: true
           route: image_info
           parameters:
             id: expr(object.getParent().getId())
+          absolute: false
 
