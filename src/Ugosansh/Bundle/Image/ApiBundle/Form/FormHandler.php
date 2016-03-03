@@ -29,7 +29,7 @@ class FormHandler
      */
     public function __construct(array $methods = [])
     {
-        $this->methods = empty($methods) ? ['POST'] : $methods;
+        $this->methods = empty($methods) ? ['POST', 'PUT'] : $methods;
     }
 
     /**
@@ -69,6 +69,33 @@ class FormHandler
         return $this->validate($form, $request);
     }
 
+
+    /**
+     * Get array of form errors
+     *
+     * @param Form $form
+     *
+     * @return array
+     */
+    public function getErrors(Form $form) {
+        $errors = [];
+
+        foreach ($form->getErrors() as $key => $error) {
+            if ($form->isRoot()) {
+                $errors['#'][] = $error->getMessage();
+            } else {
+                $errors[] = $error->getMessage();
+            }
+        }
+
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getErrors($child);
+            }
+        }
+
+        return $errors;
+    }
 
     /**
      * addMethod
