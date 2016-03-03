@@ -39,9 +39,7 @@ class ImageType extends AbstractType
             ])
         ;
 
-        if ($options['data']->getId() <= 0) {
-             $builder->add('binarySource', 'text');
-        }
+        $builder->add('binarySource', 'text');
     }
 
     /**
