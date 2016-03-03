@@ -33,8 +33,9 @@ class ImageHandler
      */
     public function createResponse(ViewHandler $handler, View $view, Request $request, $format)
     {
-        if ($view->getData() instanceof ImageInterface) {
+        $format = $request->get('_format') ?: 'json';
 
+        if (($view->getData() instanceof ImageInterface) && ($format != 'json')) {
             $image   = $view->getData();
             $content = $this->manager->getImageSource($image);
             $headers = [
@@ -44,7 +45,7 @@ class ImageHandler
             return new Response($content, 200, $headers);
         }
 
-        return new Response($view->getData(), $view->getStatusCode(), $view->getHeaders());
+        return $handler->createResponse($view, $request, 'json');
     }
 
 }

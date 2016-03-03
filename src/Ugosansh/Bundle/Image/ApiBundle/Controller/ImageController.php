@@ -53,11 +53,11 @@ class ImageController extends Controller
         $form    = $this->get('form.factory')->createNamed('', $this->get('ugosansh_image_api.image.form_type'), $image);
 
         if (!$handler->process($form, $this->get('request'))) {
-            return $this->view($form->getErrors(), 422);
+            return $this->handleView($this->view($handler->getErrors($form), 422));
         }
 
         if (!$this->getManager()->save($image)) {
-            return $this->view('Failed to save image', 500);
+            return $this->handleView($this->view('Failed to save image', 500));
         }
 
         return $this->forward('UgosanshImageApiBundle:Image:getInfoImage', ['id' => $image->getId()]);
@@ -80,16 +80,17 @@ class ImageController extends Controller
      */
     public function getInfoImageAction($id)
     {
+
         $criteria = [
             'id'     => $id,
             'source' => $this->getSource()
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $id), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
-        return $this->view($image, 200, [], ['Default', 'Detail']);
+        return $this->handleView($this->view($image, 200, ['Content-Type' => 'application/json'], ['Default', 'Detail']));
     }
 
     /**
@@ -115,10 +116,10 @@ class ImageController extends Controller
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $slug), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $slug), 404));
         }
 
-        return $this->view($image, 200, [], ['Default', 'Detail']);
+        return $this->handleView($this->view($image, 200, [], ['Default', 'Detail']));
     }
 
     /**
@@ -139,10 +140,10 @@ class ImageController extends Controller
     public function getImageGenerateAction(Request $request, $id, $width, $height, $crop)
     {
         if (!$image = $this->getManager()->findBySize($id, $this->getSource(), $width, $height, $crop)) {
-            return $this->view(sprintf('Not found image "%s"', $id), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
-        return $this->view($image, 200, [], ['Default', 'Detail']);
+        return $this->handleView($this->view($image, 200, [], ['Default', 'Detail']));
     }
 
     /**
@@ -168,13 +169,13 @@ class ImageController extends Controller
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $id), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
         $request = $this->get('request');
         $url     = $this->generateUrl('image_get', ['slug' => $image->getSlug(), '_format' => $image->getExtension()]);
 
-        return $this->view($request->getSchemeAndHttpHost() . $url);
+        return $this->handleView($this->view($request->getSchemeAndHttpHost() . $url));
     }
 
     /**
@@ -195,13 +196,13 @@ class ImageController extends Controller
     public function getImageUrlGenerateAction($id, $width, $height, $crop)
     {
        if (!$image = $this->getManager()->findBySize($id, $this->getSource(), $width, $height, $crop)) {
-            return $this->view(sprintf('Not found image "%s"', $id), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
         $request = $this->get('request');
         $url     = $this->generateUrl('image_get', ['slug' => $image->getSlug(), '_format' => $image->getExtension()]);
 
-        return $this->view($request->getSchemeAndHttpHost() . $url);
+        return $this->handleView($this->view($request->getSchemeAndHttpHost() . $url));
     }
 
     /**
@@ -227,10 +228,10 @@ class ImageController extends Controller
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $id), 404);
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
-        return $this->view($image->getChilds(), 200, [], ['Default', 'Detail']);
+        return $this->handleView($this->view($image->getChilds(), 200, [], ['Default', 'Detail']));
     }
 
     /**
@@ -280,7 +281,7 @@ class ImageController extends Controller
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $id));
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id)));
         }
 
         return $this->createEditForm($image);
@@ -310,14 +311,14 @@ class ImageController extends Controller
         ];
 
         if (!$image = $this->getManager()->findOneBy($criteria)) {
-            return $this->view(sprintf('Not found image "%s"', $id));
+            return $this->handleView($this->view(sprintf('Not found image "%s"', $id)));
         }
 
         if (!$this->getManager()->remove($image)) {
-            return $this->view(sprintf('Failed to remove image "%s"', $id));
+            return $this->handleView($this->view(sprintf('Failed to remove image "%s"', $id)));
         }
 
-        return $this->view('image removed', 200);
+        return $this->handleView($this->view('image removed', 200));
     }
 
 }
