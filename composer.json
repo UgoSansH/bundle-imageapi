@@ -12,7 +12,7 @@
     },
     "require": {
         "php"                             : ">=5.4",
-        "ugosansh/component-image"        : "~0.0.9",
+        "ugosansh/component-image"        : "~0.2",
         "nelmio/api-doc-bundle"           : "~2.7",
         "friendsofsymfony/rest-bundle"    : "~1.4",
         "stof/doctrine-extensions-bundle" : "~1.1@dev",
