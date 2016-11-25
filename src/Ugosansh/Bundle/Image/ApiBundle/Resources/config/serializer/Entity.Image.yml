@@ -17,20 +17,20 @@ Ugosansh\Bundle\Image\EntityBundle\Entity\Image:
           route: image_info
           parameters:
             id: expr(object.getId())
-          absolute: false
+          absolute: true
       - rel: url
         href:
           route: image_get
           parameters:
             slug: expr(object.getSlug())
             _format: expr(object.getExtension())
-          absolute: false
+          absolute: true
       - rel: childs
         href:
           route: image_childs
           parameters:
             id: expr(object.getId())
-          absolute: false
+          absolute: true
       - rel: parent
         exclusion:
           exclude_if: expr(null === object.getParent())
@@ -38,5 +38,5 @@ Ugosansh\Bundle\Image\EntityBundle\Entity\Image:
           route: image_info
           parameters:
             id: expr(object.getParent().getId())
-          absolute: false
+          absolute: true
 
