@@ -16,8 +16,8 @@ services:
     ugosansh_image_api.image.filesystem:
         class: Ugosansh\Component\Image\FileSystem
         arguments:
-            - @ugosansh_image_api.filesystem
-            - %ugosansh_image_api.root_dir%
+            - "@ugosansh_image_api.filesystem"
+            - "%ugosansh_image_api.root_dir%"
 
     ugosansh_image_api.resizer:
         class: Ugosansh\Component\Image\Resizer
@@ -28,41 +28,41 @@ services:
     ugosansh_image_api.uploader:
         class: Ugosansh\Component\Image\Upload\Uploader
         calls:
-            - [ setAdapter, [ @ugosansh_image_api.uploader.local ] ]
-            - [ setTempFileAdapter, [ @ugosansh_image_api.temp_file.manager ] ]
-            - [ setFileSystem, [ @ugosansh_image_api.image.filesystem ] ]
+            - [ setAdapter, [ "@ugosansh_image_api.uploader.local" ] ]
+            - [ setTempFileAdapter, [ "@ugosansh_image_api.temp_file.manager" ] ]
+            - [ setFileSystem, [ "@ugosansh_image_api.image.filesystem" ] ]
 
     ugosansh_image_api.uploader.local:
         class: Ugosansh\Component\Image\Upload\Adapter\LocalUploadAdapter
         arguments:
-            - @ugosansh_image_api.filesystem
-            - @ugosansh_image_api.finder
-            - %ugosansh_image_api.root_dir%
-            - %ugosansh_image_api.chmod%
+            - "@ugosansh_image_api.filesystem"
+            - "@ugosansh_image_api.finder"
+            - "%ugosansh_image_api.root_dir%"
+            - "%ugosansh_image_api.chmod%"
 
 
     ugosansh_image_api.form_handler:
         class: Ugosansh\Bundle\Image\ApiBundle\Form\FormHandler
         calls:
-            - [ setUploader, [ @ugosansh_image_api.uploader ] ]
+            - [ setUploader, [ "@ugosansh_image_api.uploader" ] ]
 
     ugosansh_image_api.image.form_type:
         class: Ugosansh\Bundle\Image\ApiBundle\Form\Type\ImageType
         calls:
-            - [ setDataClass, [ %ugosansh_image_api.image.class% ] ]
-            - [ setDefaultSource, [ %ugosansh_image_api.default_source% ] ]
+            - [ setDataClass, [ "%ugosansh_image_api.image.class%" ] ]
+            - [ setDefaultSource, [ "%ugosansh_image_api.default_source%" ] ]
         tags:
             - { name: form.type, alias: image }
 
     ugosansh_image_api.image.manager:
         class: Ugosansh\Bundle\Image\ApiBundle\Manager\ImageManager
         arguments:
-            - @doctrine.orm.entity_manager
+            - "@doctrine.orm.entity_manager"
             - "%ugosansh_image_api.image.repository_name%"
         calls:
-            - [ setUploader, [ @ugosansh_image_api.uploader ] ]
-            - [ setFileSystem, [ @ugosansh_image_api.image.filesystem ] ]
-            - [ setResizer, [ @ugosansh_image_api.resizer ] ]
+            - [ setUploader, [ "@ugosansh_image_api.uploader" ] ]
+            - [ setFileSystem, [ "@ugosansh_image_api.image.filesystem" ] ]
+            - [ setResizer, [ "@ugosansh_image_api.resizer" ] ]
 
     ugosansh_image_api.temp_file.manager:
         class: Ugosansh\Component\Image\Upload\Adapter\TempFileAdapter
@@ -72,14 +72,14 @@ services:
     ugosansh_image_api.image_handler:
         class: Ugosansh\Bundle\Image\ApiBundle\View\ImageHandler
         arguments:
-            - @ugosansh_image_api.image.manager
+            - "@ugosansh_image_api.image.manager"
 
     ugosansh_image_api.view_handler:
         parent: fos_rest.view_handler.default
         calls:
-            - ['registerHandler', ['png', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
-            - ['registerHandler', ['jpg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
-            - ['registerHandler', ['jpeg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
-            - ['registerHandler', ['gif', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
-            - ['registerHandler', ['svg', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
-            - ['registerHandler', ['html', [@ugosansh_image_api.image_handler, 'createResponse'] ] ]
+            - ['registerHandler', ['png', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
+            - ['registerHandler', ['jpg', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
+            - ['registerHandler', ['jpeg', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
+            - ['registerHandler', ['gif', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
+            - ['registerHandler', ['svg', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
+            - ['registerHandler', ['html', ["@ugosansh_image_api.image_handler", 'createResponse'] ] ]
