@@ -1,31 +1,31 @@
 image_create:
-    pattern: /
+    path: /
     defaults: { _controller: "UgosanshImageApiBundle:Image:postImage", _format: 'json' }
     methods: POST
 
 image_update:
-    pattern: /{id}
+    path: /{id}
     defaults: { _controller: "UgosanshImageApiBundle:Image:putImage" }
     methods: PUT
     requirements:
         id: \d+
 
 image_info:
-    pattern: /{id}
+    path: /{id}
     defaults: { _controller: "UgosanshImageApiBundle:Image:getInfoImage", _format: 'json' }
     methods: GET
     requirements:
         id: \d+
 
 image_delete:
-    pattern: /{id}
+    path: /{id}
     defaults: { _controller: "UgosanshImageApiBundle:Image:deleteImage", _format: 'json' }
     methods: DELETE
     requirements:
         id: \d+
 
 image_info_generate:
-    pattern: /{id}-{width}-{height}-{crop}.{_format}
+    path: /{id}-{width}-{height}-{crop}.{_format}
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImageGenerate", _format: 'json' }
     methods: GET
     requirements:
@@ -36,14 +36,14 @@ image_info_generate:
         crop: 0|1|2
 
 image_url:
-    pattern: /{id}/url
+    path: /{id}/url
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImageUrl", _format: 'json' }
     methods: GET
     requirements:
         id: \d+
 
 image_url_generate:
-    pattern: /{id}-{width}-{height}-{crop}/url
+    path: /{id}-{width}-{height}-{crop}/url
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImageUrlGenerate", _format: 'json' }
     methods: GET
     requirements:
@@ -53,14 +53,14 @@ image_url_generate:
         crop: '1|2|3'
 
 image_childs:
-    pattern: /{id}/childs
+    path: /{id}/childs
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImageChild", _format: 'json' }
     methods: GET
     requirements:
         id: \d+
 
 image_get:
-    pattern: /{slug}.{_format}
+    path: /{slug}.{_format}
     defaults: { _controller: "UgosanshImageApiBundle:Image:getImage" }
     methods: GET
     requirements:
