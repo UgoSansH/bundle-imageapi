@@ -4,12 +4,11 @@ namespace Ugosansh\Bundle\Image\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\View;
-
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Ugosansh\Bundle\Image\ApiBundle\Form\Type\ImageType;
 
 /**
  * Image entity controller
@@ -50,9 +49,10 @@ class ImageController extends Controller
     protected function createEditForm($image)
     {
         $handler = $this->get('ugosansh_image_api.form_handler');
-        $form    = $this->get('form.factory')->createNamed('', $this->get('ugosansh_image_api.image.form_type'), $image);
+        $form    = $this->get('form.factory')->createNamed('', ImageType::class, $image);
+        $request = $this->get('request_stack')->getMasterRequest();
 
-        if (!$handler->process($form, $this->get('request'))) {
+        if (!$handler->process($form, $request)) {
             return $this->handleView($this->view($handler->getErrors($form), 422));
         }
 
@@ -172,7 +172,7 @@ class ImageController extends Controller
             return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
-        $request = $this->get('request');
+        $request = $this->get('request_stack')->getMasterRequest();
         $url     = $this->generateUrl('image_get', ['slug' => $image->getSlug(), '_format' => $image->getExtension()]);
 
         return $this->handleView($this->view($request->getSchemeAndHttpHost() . $url));
@@ -199,7 +199,7 @@ class ImageController extends Controller
             return $this->handleView($this->view(sprintf('Not found image "%s"', $id), 404));
         }
 
-        $request = $this->get('request');
+        $request = $this->get('request_stack')->getMasterRequest();
         $url     = $this->generateUrl('image_get', ['slug' => $image->getSlug(), '_format' => $image->getExtension()]);
 
         return $this->handleView($this->view($request->getSchemeAndHttpHost() . $url));
